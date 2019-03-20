@@ -1,4 +1,5 @@
 use std::env;
+use std::fs;
 
 #[cfg(test)]
 mod tests {
@@ -14,19 +15,27 @@ mod tests {
 
     #[test]
     fn should_be_default() {
-        let mut it: Iterator<Item=String>;
-        let val = get_or_default(&mut it, "value".to_string());
-        assert_eq!(val, "value");
+        let args = vec!["skipped"];
+        let mut it = args.iter();
+        it.next();
+        let val = get_or_default(&mut it, &"value");
+        assert_eq!(val, &"value");
     }
 }
 
 #[allow(unused_variables)]
 fn main() {
     let mut args = env::args();
-    let name = get_or_default(&mut args, "".to_string());
+    let name    = get_or_default(&mut args, "".to_string());
     let pattern = get_or_default(&mut args, "".to_string());
-    let file = get_or_default(&mut args, ".".to_string());
+    let file    = get_or_default(&mut args, ".".to_string());
+
     println!("Looking for: {} in {}", pattern, file);
+    
+    let content = fs::read_to_string(file)
+        .expect("Couldn't read file");
+
+    println!("Content: \n{}", content);
 }
 
 fn get_or_default<T, U>(args: &mut T, default: U) -> U
