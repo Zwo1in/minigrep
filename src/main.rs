@@ -7,19 +7,18 @@ mod tests {
 
     #[test]
     fn should_get_value() {
-        let args = vec!["value"];
-        let mut it = args.iter();
-        let val = get_or_default(&mut it, &"");
-        assert_eq!(val, &"value");
+        let args = vec!["value".to_string()];
+        let mut it = args.iter().cloned();
+        let val = get_or_default(&mut it, "".to_string());
+        assert_eq!(val, "value".to_string());
     }
 
     #[test]
     fn should_be_default() {
-        let args = vec!["skipped"];
-        let mut it = args.iter();
-        it.next();
-        let val = get_or_default(&mut it, &"value");
-        assert_eq!(val, &"value");
+        let args : Vec<String> = Vec::new();
+        let mut it = args.iter().cloned();
+        let val = get_or_default(&mut it, "value".to_string());
+        assert_eq!(val, "value".to_string());
     }
 }
 
