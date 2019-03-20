@@ -24,17 +24,34 @@ mod tests {
 
 #[allow(unused_variables)]
 fn main() {
-    let mut args = env::args();
-    let name    = get_or_default(&mut args, "".to_string());
-    let pattern = get_or_default(&mut args, "".to_string());
-    let file    = get_or_default(&mut args, ".".to_string());
+    let args = env::args();
+    let conf = Config::new(args);
 
-    println!("Looking for: {} in {}", pattern, file);
+    println!("Looking for: {} in {}", conf.query, conf.filename);
     
-    let content = fs::read_to_string(file)
+    let content = fs::read_to_string(conf.filename)
         .expect("Couldn't read file");
 
     println!("Content: \n{}", content);
+}
+
+#[derive(Debug)]
+struct Config {
+    name: String,
+    query: String,
+    filename: String,
+}
+
+impl Config {
+    fn new<T>(mut args: T) -> Config 
+        where T: Iterator<Item=String>
+    {
+        let name     = get_or_default(&mut args, "".to_string());
+        let query    = get_or_default(&mut args, "".to_string());
+        let filename = get_or_default(&mut args, ".".to_string());
+
+        Config {name, query, filename}
+    }
 }
 
 fn get_or_default<T, U>(args: &mut T, default: U) -> U
