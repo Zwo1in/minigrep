@@ -24,8 +24,8 @@ mod tests {
 
 #[allow(unused_variables)]
 fn main() {
-    let args = env::args();
-    let conf = Config::new(args);
+    let mut args = env::args();
+    let conf = Config::new(&mut args);
 
     println!("Looking for: {} in {}", conf.query, conf.filename);
     
@@ -43,12 +43,12 @@ struct Config {
 }
 
 impl Config {
-    fn new<T>(mut args: T) -> Config 
+    fn new<T>(args: &mut T) -> Config 
         where T: Iterator<Item=String>
     {
-        let name     = get_or_default(&mut args, "".to_string());
-        let query    = get_or_default(&mut args, "".to_string());
-        let filename = get_or_default(&mut args, ".".to_string());
+        let name     = get_or_default(args, "".to_string());
+        let query    = get_or_default(args, "".to_string());
+        let filename = get_or_default(args, ".".to_string());
 
         Config {name, query, filename}
     }
