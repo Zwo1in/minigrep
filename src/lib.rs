@@ -30,6 +30,28 @@ mod tests {
 
         assert_eq!(conf_with_values, conf_with_defaults);
     }
+
+    #[test]
+    fn search_should_return_whole_line() {
+        let query = "arg";
+        let content = "\
+He wasn't right about it
+nor his argumentation was
+but he was still talkin'";
+
+        assert_eq!(vec!["nor his argumentation was"], search(&query, &content));
+    }
+
+    #[test]
+    fn search_should_return_empty() {
+        let query = "tą";
+        let content = "\
+He wasn't right about it
+nor his argumentation was
+but he was still talkin'";
+
+        assert_eq!(Vec::<&str>::new(), search(&query, &content));
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -66,7 +88,19 @@ pub fn get_or_default<T, U>(args: &mut T, default: U) -> U
 
 pub fn run(conf: &Config) -> Result<(), Box<dyn Error>> {
     let content = fs::read_to_string(&conf.filename)?;
-    println!("Content \n{}", content);
-
+    for line in search(&conf.query, &content) {
+        println!("{}", line);
+    }
     Ok(())
+}
+
+pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut result = Vec::<&str>::new();
+    for line in content.lines() {
+        if line.contains(query) {
+            result.push(line);
+        }
+    }
+
+    result
 }
