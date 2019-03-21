@@ -2,7 +2,7 @@ use std::env;
 use std::process;
 
 use minigrep;
-use minigrep::Config;
+use minigrep::config::Config;
 
 fn main() {
     let mut args = env::args();
