@@ -1,3 +1,5 @@
+use std::env;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -26,7 +28,8 @@ mod tests {
         assert_eq!(Config {
             name: "".to_string(),
             query: "".to_string(),
-            filename: ".".to_string(),}, conf);
+            filename: ".".to_string(),
+            ..conf }, conf);
     }
 
     #[test]
@@ -44,6 +47,7 @@ pub struct Config {
     pub name: String,
     pub query: String,
     pub filename: String,
+    pub sensitive: bool,
 }
 
 impl Config {
@@ -53,10 +57,13 @@ impl Config {
         let name     = get_or_default(args, "".to_string());
         let query    = get_or_default(args, "".to_string());
         let filename = get_or_default(args, "".to_string());
+
+        let sensitive = env::var("SENSITIVE").is_err();
+
         if filename == "" {
             Err("Not enough arguments provided")
         } else {
-            Ok(Config {name, query, filename})
+            Ok(Config {name, query, filename, sensitive,})
         }
     }
 }
