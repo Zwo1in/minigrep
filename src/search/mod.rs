@@ -2,7 +2,7 @@
 mod tests {
     use super::*;
 
-        #[test]
+    #[test]
     fn search_should_return_whole_line() {
         let query = "arg";
         let content = "\
