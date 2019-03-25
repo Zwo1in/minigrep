@@ -11,7 +11,7 @@ fn main() {
         eprintln!("Process exit status: 1");
         process::exit(1);
     });
-    
+
     if let Err(e) = minigrep::run(&conf) {
         eprintln!("Abborted due to error: {}", e);
         eprintln!("Process exit status: 1");
